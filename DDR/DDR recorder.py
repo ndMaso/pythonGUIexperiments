@@ -67,12 +67,12 @@ class Recorder:
         df = self.df
         temp = (df == 0).apply(np.all, axis=1)
         # Drop initial rows with all zeros i.e. no notes.
-        df = df.iloc[temp[not temp].index[0]:]
+        df = df.iloc[temp[temp == False].index[0]:]
         # Reset index so first is zero
         df.reset_index(drop=True, inplace=True)
         temp = (df == 0).apply(np.all, axis=1)
         # Drop all rows with no notes, but leave the index as it.
-        df = df.loc[not temp]
+        df = df.loc[temp == False]
         with open(filename, 'w') as json_file:
             json.dump(df.to_dict(), json_file)
 

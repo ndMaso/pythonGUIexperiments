@@ -6,9 +6,9 @@ import json
 
 
 class DdrFile:
-    # holds the notes in sequence with uldr = 1234, and indexed with beat number divided by 12
-    # has methods used to set/create a ddrfile and can be saved, class Reader, takes
-    def __init__(self, transcript, bpm=80, divisions_per_beat=4, beats_before_note=4):
+    # holds the notes in sequence with uldr = 1234, and indexed with subdivision number
+    # has methods used to set/create a ddrfile and can be saved.
+    def __init__(self, transcript, bpm=100, divisions_per_beat=4, beats_before_note=2):
         if isinstance(transcript, pd.DataFrame):
             self.transcript = transcript.dropna(how='all').fillna(0)
             self.transcript.index += divisions_per_beat * beats_before_note * 2
@@ -33,9 +33,6 @@ class DdrFile:
 
     def set_beats_before(self, bbn):
         self.beatsBeforeNote = bbn
-
-    def set_transcript(self, t):
-        self.transcript = t
 
 
 class Reader:
