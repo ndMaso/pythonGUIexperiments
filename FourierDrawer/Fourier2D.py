@@ -199,6 +199,12 @@ class DrawScreen:
             rely=0, relheight=0.1, relx=0.9, relwidth=0.1, bordermode='inside')
         tk.Button(master=self.screen, text='+', command=self.addcurve, borderwidth=10, relief=tk.GROOVE).place(
             rely=0.12, relheight=0.1, relx=0.9, relwidth=0.1, bordermode='inside')
+        tk.Button(master=self.screen, text='delete', command=self.deleteLast, borderwidth=10, relief=tk.GROOVE).place(
+            rely=0.24, relheight=0.1, relx=0.9, relwidth=0.1, bordermode='inside')
+        tk.Button(master=self.screen, text='interpolate', command=self.draw, borderwidth=10, relief=tk.GROOVE).place(
+            rely=0.36, relheight=0.1, relx=0.9, relwidth=0.1, bordermode='inside')
+        tk.Button(master=self.screen, text='fourier', command=self.generate, borderwidth=10, relief=tk.GROOVE).place(
+            rely=0.48, relheight=0.1, relx=0.9, relwidth=0.1, bordermode='inside')
         tk.Label(master=self.screen, text='Add Line', font=('', 12)).place(rely=0.0, relwidth=0.1, relx=0.78,
                                                                            relheight=0.1, bordermode='inside')
         tk.Label(master=self.screen, text='Add Curve', font=('', 12)).place(rely=0.12, relwidth=0.1, relx=0.78,
@@ -214,6 +220,7 @@ class DrawScreen:
 
     def addline(self):
         if len(self.shapelist) != 0:
+            # Force last point of previous shape at same point at first point of current shape
             lp = self.shapelist[-1].last_point()
             self.shapelist.append(GraphicalShape(np.concatenate([[lp], np.random.rand(1, 2) * 0.8]), self.screen))
         else:
@@ -226,7 +233,7 @@ class DrawScreen:
         else:
             self.shapelist.append(GraphicalShape(np.random.rand(5, 2) * 0.8, self.screen))
 
-    def draw(self, event):
+    def draw(self, event=None):
         if self.firstDrawing:
             self.t.clear()
             self.firstDrawing = False
@@ -248,12 +255,12 @@ class DrawScreen:
         self.t.up()
         self.firstDrawing = True
 
-    def deleteLast(self, event):
+    def deleteLast(self, event=None):
         if len(self.shapelist) is not 0:
             self.shapelist[-1].destroy()
             del self.shapelist[-1]
 
-    def generate(self, event):
+    def generate(self, event=None):
         linelist = []
         for s in self.shapelist:
             p = np.rollaxis(s.get_points(), 1)
