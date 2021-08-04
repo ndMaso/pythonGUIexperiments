@@ -9,25 +9,26 @@ import tkinter as tk
 dataframe = pd.read_excel("KoreanVocab.xlsx").applymap(str.strip)
 dataframe.loc[:, 'power'] = 1
 dataframe.loc[:, 'counter'] = 0
-Korean = dataframe.groupby(['Korean', 'Grammar'], sort=False).apply(lambda df: list(df['English']))
-English = dataframe.groupby(['English', 'Grammar'], sort=False).apply(lambda df: list(df['Korean']))
-Korean = Korean.to_frame()
-Korean.loc[:, 'power'] = 1
-Korean.loc[:, 'counter'] = 0
-English = English.to_frame()
-English.loc[:, 'power'] = 1
-English.loc[:, 'counter'] = 0
-KoreanGrammars = {i: Korean.xs(i, level='Grammar') for i in dataframe.Grammar.unique()}
-EnglishGrammars = {i: English.xs(i, level='Grammar') for i in dataframe.Grammar.unique()}
+lang1 = dataframe.groupby(['Lang1', 'Grammar'], sort=False).apply(lambda df: list(df['Lang2']))
+lang2 = dataframe.groupby(['Lang2', 'Grammar'], sort=False).apply(lambda df: list(df['Lang1']))
+# Convert series to frame
+lang1 = lang1.to_frame()
+lang1.loc[:, 'power'] = 1
+lang1.loc[:, 'counter'] = 0
+lang2 = lang2.to_frame()
+lang2.loc[:, 'power'] = 1
+lang2.loc[:, 'counter'] = 0
+lang1_grammars = {i: lang1.xs(i, level='Grammar') for i in dataframe.Grammar.unique()}
+lang2_grammars = {i: lang2.xs(i, level='Grammar') for i in dataframe.Grammar.unique()}
 grammars = dataframe.Grammar.unique()
 
 
 # Entry point to the question answering loop
 def quiz_selector(gui, prompt_language, gram):
     if prompt_language == 1:
-        df = EnglishGrammars[grammars[gram-1]]
+        df = lang2_grammars[grammars[gram-1]]
     else:
-        df = KoreanGrammars[grammars[gram-1]]
+        df = lang1_grammars[grammars[gram-1]]
     gui(df)
     return
 
