@@ -1,5 +1,5 @@
 # pythonGUIexperiments
-tkinter work for little games and math visualization
+tkinter work for little games and math visualization. 
 General programming ideas that involve or have added some visualization/interactivity from the tkinter module
 
 Some components of the programs in addition to gui handling include:
